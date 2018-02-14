@@ -271,7 +271,7 @@ $(document).ready( function() {
 						charGroup.addChild(dot);
 
 						// Compute corresponding gcode position
-						if(x > 0 || y > 0) {
+						//if(x > 0 || y > 0) {
 
 							gx = braille.invertX ? - px : braille.paperWidth - px;
 							gy = -py;						// canvas y axis goes downward, printers goes upward
@@ -285,7 +285,7 @@ $(document).ready( function() {
 
 							gcode += gcodeMoveTo(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
 							GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy));
-						}
+						//}
 						
 						// move printer head
 						//gcode += gcodeMoveTo(null, null, headDownPosition)
