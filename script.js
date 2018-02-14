@@ -279,8 +279,10 @@ $(document).ready( function() {
 						}
 						
 						// move printer head
-						gcode += gcodeMoveTo(null, null, headDownPosition)
-						gcode += gcodeMoveTo(null, null, headUpPosition)
+						//gcode += gcodeMoveTo(null, null, headDownPosition)
+						//gcode += gcodeMoveTo(null, null, headUpPosition)
+						gcode += GCODEdown;
+						gcode += GCODEup;
 					}
 				}
 			}
