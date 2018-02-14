@@ -176,7 +176,7 @@ $(document).ready( function() {
 		project.clear();
 
 		// Start GCode
-
+		GCODEdotposition = [];
 		gcode = gcodeSetAbsolutePositioning()
 		// gcode += gcodeResetPosition(0, 0, 0)
 		gcode += gcodeSetSpeed(braille.speed)
@@ -340,9 +340,12 @@ $(document).ready( function() {
 		$('#print-size').text(printBounds.width.toFixed(0) + ' x ' + printBounds.height.toFixed(0))
 		
 		// print dot position
+		let pstr = '';				
 		for (d = 0; d < GCODEdotposition.length (); d++)
 		{
+			pstr += GCODEdotposition[d].x + ' ' + GCODEdotposition[d].y + '\r\n';
 		}
+		$("#dotposition").val (pstr);
 	}
 
 	brailleToGCode()
