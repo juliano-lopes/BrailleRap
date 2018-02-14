@@ -341,7 +341,7 @@ $(document).ready( function() {
 		
 		// print dot position
 		let pstr = '';				
-		for (d = 0; d < GCODEdotposition.length (); d++)
+		for (d = 0; d < GCODEdotposition.length; d++)
 		{
 			pstr += GCODEdotposition[d].x + ' ' + GCODEdotposition[d].y + '\r\n';
 		}
