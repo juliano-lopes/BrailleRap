@@ -1,6 +1,7 @@
 paper.install(window);
 let svg = null;
 let svgButton = null;
+let test = false;
 let divJ = null
 $(document).ready( function() {
 
