@@ -32,7 +32,7 @@ $(document).ready( function() {
 		svgPosX: 0,
 		svgPosY: 0,
 		// svgScale: 1,
-		language: "6 dots"
+		language: "6 dots",	
 		GCODEup: 'M3 S0',
 		GCODEdown: 'M3 S1'
 	};
