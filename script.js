@@ -284,7 +284,7 @@ $(document).ready( function() {
 							}
 
 							gcode += gcodeMoveTo(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
-							GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy);
+							GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy));
 						}
 						
 						// move printer head
