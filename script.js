@@ -282,8 +282,8 @@ $(document).ready( function() {
 						// move printer head
 						//gcode += gcodeMoveTo(null, null, headDownPosition)
 						//gcode += gcodeMoveTo(null, null, headUpPosition)
-						gcode += braille.GCODEdown;
-						gcode += braille.GCODEup;
+						gcode += braille.GCODEdown + ';\r\n';
+						gcode += braille.GCODEup + ';\r\n';
 					}
 				}
 			}
