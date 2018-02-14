@@ -33,8 +33,8 @@ $(document).ready( function() {
 		svgPosY: 0,
 		// svgScale: 1,
 		language: "6 dots"
-		//GCODEup: 'M3 S0',
-		//GCODEdown: 'M3 S1'
+		GCODEup: 'M3 S0',
+		GCODEdown: 'M3 S1'
 	};
 
 	let pixelMillimeterRatio = null;
