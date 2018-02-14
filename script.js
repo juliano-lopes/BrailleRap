@@ -340,10 +340,10 @@ $(document).ready( function() {
 		$('#print-size').text(printBounds.width.toFixed(0) + ' x ' + printBounds.height.toFixed(0))
 		
 		// print dot position
-		let pstr = '';				
+		let pstr = GCODEdotposition.length + ' ' +'\r\n' ;				
 		for (d = 0; d < GCODEdotposition.length; d++)
 		{
-			pstr += GCODEdotposition[d].x + ' ' + GCODEdotposition[d].y + '\r\n';
+			pstr += '(' + d + ')' + GCODEdotposition[d].x + ' ' + GCODEdotposition[d].y + '\r\n';
 		}
 		$("#dotposition").val (pstr);
 	}
