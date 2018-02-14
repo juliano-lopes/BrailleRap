@@ -400,8 +400,8 @@ $(document).ready( function() {
 	createController('mirrorX', null, null, null, printerSettingsFolder, 'Mirror X');
 	createController('mirrorY', null, null, null, printerSettingsFolder, 'Mirror Y');
 	createController('goToZero', null, null, null, printerSettingsFolder, 'Go to zero');
-	//createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
-	//createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
+	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
+	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
 	
 	printerSettingsFolder.open();
 
