@@ -48,7 +48,14 @@ $(document).ready( function() {
 	function replaceAt(s, n, t) {
 	    return s.substring(0, n) + t + s.substring(n + 1);
 	}
-
+	
+	function DotPosition (xpos, ypos) {
+		this.x = xpos;
+		this.y = ypos;
+	}
+	
+	var GCODEdotposition = [];
+	
 	let latinToBraille = new Map(); 		// get braille dot indices from char
 	let dotMap = null;					// get dot order from x, y dot coordinates
 	let numberPrefix = null; 			// the indices of the number prefix of the language
@@ -277,6 +284,7 @@ $(document).ready( function() {
 							}
 
 							gcode += gcodeMoveTo(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
+							GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy);
 						}
 						
 						// move printer head
@@ -284,6 +292,7 @@ $(document).ready( function() {
 						//gcode += gcodeMoveTo(null, null, headUpPosition)
 						gcode += braille.GCODEdown + ';\r\n';
 						gcode += braille.GCODEup + ';\r\n';
+						
 					}
 				}
 			}
@@ -329,6 +338,11 @@ $(document).ready( function() {
 		}
 		printBounds = printBounds.scale(1 / mmPerPixels)
 		$('#print-size').text(printBounds.width.toFixed(0) + ' x ' + printBounds.height.toFixed(0))
+		
+		// print dot position
+		for (d = 0; d < GCODEdotposition.length (); d++)
+		{
+		}
 	}
 
 	brailleToGCode()
