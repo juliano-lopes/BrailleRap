@@ -11,17 +11,17 @@ $(document).ready( function() {
 
 	// global object to store all parameters: braille dimensions are standards
 	let braille = { 
-		marginWidth: 20, 
-		marginHeight: 20, 
-		paperWidth: 170, 
-		paperHeight: 125, 
+		marginWidth: 10, 
+		marginHeight: 10, 
+		paperWidth: 210, 
+		paperHeight: 290, 
 		letterWidth: 2.54, 
 		dotRadius: 1.25, 
 		letterPadding: 3.75, 
 		linePadding: 5.3, 
 		headDownPosition: -2.0, 
 		headUpPosition: 10, 
-		speed: 5000, 
+		speed: 2000, 
 		delta: false, 
 		goToZero: false, 
 		invertX: true, 
@@ -42,8 +42,11 @@ $(document).ready( function() {
 
 	let text = '';
 	let gcode = '';
+	let sortedgcode = '';
 	
-
+	let xhead = 0;
+	let yhead = 0;
+	
 	// Replace a char at index in a string
 	function replaceAt(s, n, t) {
 	    return s.substring(0, n) + t + s.substring(n + 1);
@@ -95,8 +98,62 @@ $(document).ready( function() {
 	}
 
 	let gcodeMoveTo = function(X, Y, Z) {
+		
+		
 		return 'G1' + gcodePosition(X, Y, Z)
+		
 	}
+	
+	let gcodeMoveToCached = function (X,Y,Z)
+	{
+		if (X != null)
+			xhead = X;
+		if (Y != null)
+			yhead = Y;
+		
+		return gcodeMoveTo (X,Y,Z);
+	}
+	
+	
+	let gcodeprintdot = function () {
+		
+		
+		let s = braille.GCODEdown + ';\r\n';
+		s += braille.GCODEup + ';\r\n';
+		
+		return (s);
+	}
+	
+	let gcodePrintDotCached = function ()
+	{
+		if (xhead != null && yhead != null)
+			GCODEdotposition.push (new DotPosition (xhead,yhead));
+		
+		return gcodeprintdot ();
+	}
+	
+	let buildoptimizedgcode = function ()
+	{
+		codestr = gcodeSetAbsolutePositioning();
+		// gcode += gcodeResetPosition(0, 0, 0)
+		codestr += gcodeSetSpeed(braille.speed);
+		if(braille.goToZero) {
+			codestr += gcodeMoveTo(0, 0, 0)
+		}
+		codestr += gcodeMoveTo(0, 0, braille.headUpPosition);
+		
+		GCODEdotposition.sort (function (a,b) {
+			if (a.y == b.y) return (a.x - b.x);
+			return (a.y - b.y);
+		})
+		for (i = 0; i < GCODEdotposition.length; i++)
+		{
+			codestr += gcodeMoveTo (GCODEdotposition[i].x, GCODEdotposition[i].y);
+			codestr += gcodeprintdot ();
+		}
+		return (codestr);
+	}
+	
 
 	// draw SVG
 	let dotAt = (point, gcode, bounds, lastDot)=> {
@@ -177,13 +234,13 @@ $(document).ready( function() {
 
 		// Start GCode
 		GCODEdotposition = [];
-		gcode = gcodeSetAbsolutePositioning()
+		gcode = gcodeSetAbsolutePositioning();
 		// gcode += gcodeResetPosition(0, 0, 0)
-		gcode += gcodeSetSpeed(braille.speed)
+		gcode += gcodeSetSpeed(braille.speed);
 		if(braille.goToZero) {
 			gcode += gcodeMoveTo(0, 0, 0)
 		}
-		gcode += gcodeMoveTo(0, 0, headUpPosition)
+		gcode += gcodeMoveTo(0, 0, headUpPosition);
 
 		// initialize position: top left + margin
 		let currentX = braille.marginWidth;
@@ -252,7 +309,7 @@ $(document).ready( function() {
 			}
 
 			// add gcode
-			gcode += gcodeMoveTo(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
+			gcode += gcodeMoveToCached(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
 
 			// Draw braille char and compute gcode
 			let charGroup = new Group()
@@ -271,7 +328,7 @@ $(document).ready( function() {
 						charGroup.addChild(dot);
 
 						// Compute corresponding gcode position
-						//if(x > 0 || y > 0) {
+						if(x > 0 || y > 0) {
 
 							gx = braille.invertX ? - px : braille.paperWidth - px;
 							gy = -py;						// canvas y axis goes downward, printers goes upward
@@ -283,15 +340,16 @@ $(document).ready( function() {
 								gy += braille.paperHeight;
 							}
 
-							gcode += gcodeMoveTo(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
-							GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy));
-						//}
+							gcode += gcodeMoveToCached(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
+							//GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy));
+						}
 						
 						// move printer head
 						//gcode += gcodeMoveTo(null, null, headDownPosition)
 						//gcode += gcodeMoveTo(null, null, headUpPosition)
-						gcode += braille.GCODEdown + ';\r\n';
-						gcode += braille.GCODEup + ';\r\n';
+						//gcode += braille.GCODEdown + ';\r\n';
+						//gcode += braille.GCODEup + ';\r\n';
+						gcode += gcodePrintDotCached ();
 						
 					}
 				}
@@ -345,7 +403,10 @@ $(document).ready( function() {
 		{
 			pstr += '(' + d + ')' + GCODEdotposition[d].x + ' ' + GCODEdotposition[d].y + '\r\n';
 		}
+		
+		sortedgcode = buildoptimizedgcode();
 		$("#dotposition").val (pstr);
+		$("#optimizedgcode").val (sortedgcode);
 	}
 
 	brailleToGCode()
@@ -498,6 +559,19 @@ $(document).ready( function() {
 
 	}}, 'saveGCode').name('Save GCode')
 
+	// Add download button (to get a text file of the gcode)
+	gui.add({saveOptimGCode: function(){
+		var a = document.body.appendChild(
+			document.createElement("a")
+		);
+		a.download = "braille.gcode";
+		a.href = encodeURI("data:text/plain;charset=utf-8," + sortedgcode);
+
+		a.click(); // Trigger a click on the element
+		a.remove();
+
+	}}, 'saveOptimGCode').name('Save Otpim GCode')
+	
 	createController('svgStep', 0, 100, null, svgFolder, 'SVG step');
 	createController('svgDots', null, null , null, svgFolder, 'SVG dots');
 	let updateSVGPositionX = (value) => {
@@ -528,4 +602,5 @@ $(document).ready( function() {
 		brailleToGCode(text);
 	})
 
-})
+}
+
