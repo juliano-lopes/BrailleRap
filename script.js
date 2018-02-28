@@ -24,10 +24,10 @@ $(document).ready( function() {
 		speed: 5000, 
 		delta: false, 
 		goToZero: false, 
-		invertX: false, 
-		invertY: false, 
-		mirrorX: false, 
-		mirrorY: false, 
+		invertX: true, 
+		invertY: true, 
+		mirrorX: true, 
+		mirrorY: true, 
 		svgStep: 2,
 		svgDots: true,
 		svgPosX: 0,
@@ -129,7 +129,7 @@ $(document).ready( function() {
 				item = path
 			}
 		}
-		if((item.className == 'Path' || item.className == 'CompoundPath') && item.strokeWidth > 0) {
+		if((item.className == 'Path' || item.className == 'CompoundPath') && item.strokeWidth > 0) {
 			let path = item
 			if(path.segments != null) {
 				for(let i=0 ; i<path.length ; i+=braille.svgStep) {
