@@ -35,7 +35,8 @@ $(document).ready( function() {
 		// svgScale: 1,
 		language: "6 dots",	
 		GCODEup: 'M3 S0',
-		GCODEdown: 'M3 S1'
+		GCODEdown: 'M3 S1',
+		
 	};
 
 	let pixelMillimeterRatio = null;
@@ -64,9 +65,22 @@ $(document).ready( function() {
 	let numberPrefix = null; 			// the indices of the number prefix of the language
 
 	let gcodeSetAbsolutePositioning = function() {
-		return 'G90;\r\n'
+		return 'G90;\r\n';
 	}
 
+	let gcodeMotorOff = function()
+	{
+		return 'M84;\r\n';
+	}
+	
+	let gcodeHome = function ()
+	{
+		str = 'G28 X;\r\n';
+		str += 'G28 Y`\r\n';
+		
+		return str; 
+	}
+	
 	let gcodeResetPosition = function(X, Y, Z) {
 		return 'G92' + gcodePosition(X, Y, Z);
 	}
@@ -134,23 +148,38 @@ $(document).ready( function() {
 	
 	let buildoptimizedgcode = function ()
 	{
-		codestr = gcodeSetAbsolutePositioning();
+		var sortedpositions = [];
+		
+		codestr = gcodeHome ();
+		//codestr += gcodeSetAbsolutePositioning();
+		
 		// gcode += gcodeResetPosition(0, 0, 0)
 		codestr += gcodeSetSpeed(braille.speed);
+		codestr += 'G92 Y0.0;\r\n';
+		codestr += 'G92 X0.0;\r\n';
+		
 		if(braille.goToZero) {
 			codestr += gcodeMoveTo(0, 0, 0)
 		}
-		codestr += gcodeMoveTo(0, 0, braille.headUpPosition);
+		//codestr += gcodeMoveTo(0, 0, braille.headUpPosition);
 		
 		GCODEdotposition.sort (function (a,b) {
 			if (a.y == b.y) return (a.x - b.x);
 			return (a.y - b.y);
 		})
-		for (i = 0; i < GCODEdotposition.length; i++)
+
+		sortedpositions = gcodesortzigzag (GCODEdotposition);
+		
+		console.log("sorted positions:" + sortedpositions.length);
+		
+		for (i = 0; i < sortedpositions.length; i++)
 		{
-			codestr += gcodeMoveTo (GCODEdotposition[i].x, GCODEdotposition[i].y);
+			codestr += gcodeMoveTo (sortedpositions[i].x, sortedpositions[i].y);
 			codestr += gcodeprintdot ();
 		}
+		
+		codestr += gcodeMoveTo (0,290);
+		codestr += gcodeMotorOff ();
 		return (codestr);
 	}
 	
@@ -202,6 +231,62 @@ $(document).ready( function() {
 		}
 	}
 
+	// gcode sort by line
+	let gcodesortzigzag = function (positions)
+	{
+		var i;
+		var  s = 0;
+		var e = 0;
+		var dir = 1;
+		var tmp = [];
+		var sorted = [];
+		
+		if (positions == null)
+			return (sorted);
+		
+		while (e < positions.length)
+		{
+			while ((positions[s].y == positions[e].y) )
+			{
+				console.log("sort pos:" + s + " " + e + " " + positions.length);
+				e++;
+				console.log("sort posa:" + s + " " + e + " " + positions.length);
+				if (e == (positions.length))
+				{
+					console.log("exit loop" + positions.length);
+					break;
+				}
+			}
+			console.log("sort pos selected:" + s + " " + e + " " + positions.length);
+			//if (e - s >= 0)
+			{
+				for (i = s; i < e; i++)
+				{
+					tmp.push (positions[i]);
+				}
+				tmp.sort (function (a,b) {
+					if (a.y == b.y) return ((a.x - b.x) * dir);
+						return (a.y - b.y);
+				})
+				
+				for(i = 0; i < tmp.length; i++)
+					sorted.push (tmp[i]);
+				tmp = [];
+				dir = - dir;
+				
+				
+				s = e;
+			}	
+			if (e >= positions.length)
+			{
+					console.log("exit loop end " + e + " "+positions.length);
+					break;
+			}					
+		}
+		
+		return (sorted);
+	}
+	
 	// Generates code
 	let svgToGCode = function(svg, gcode) {
 		plotItem(svg, gcode, svg.bounds)
@@ -602,5 +687,6 @@ $(document).ready( function() {
 		brailleToGCode(text);
 	})
 
-}
+})
+
 
