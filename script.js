@@ -632,6 +632,7 @@ $(document).ready( function() {
 	divJ.change(handleFileSelect)
 
 	// Add download button (to get a text file of the gcode)
+	/*
 	gui.add({saveGCode: function(){
 		var a = document.body.appendChild(
 			document.createElement("a")
@@ -643,7 +644,7 @@ $(document).ready( function() {
 		a.remove();
 
 	}}, 'saveGCode').name('Save GCode')
-
+	*/
 	// Add download button (to get a text file of the gcode)
 	gui.add({saveOptimGCode: function(){
 		var a = document.body.appendChild(
