@@ -21,7 +21,7 @@ $(document).ready( function() {
 		linePadding: 5.3, 
 		headDownPosition: -2.0, 
 		headUpPosition: 10, 
-		speed: 2000, 
+		speed: 4000, 
 		delta: false, 
 		goToZero: false, 
 		invertX: true, 
@@ -76,7 +76,7 @@ $(document).ready( function() {
 	let gcodeHome = function ()
 	{
 		str = 'G28 X;\r\n';
-		str += 'G28 Y`\r\n';
+		str += 'G28 Y;\r\n';
 		
 		return str; 
 	}
