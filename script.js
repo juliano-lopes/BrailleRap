@@ -11,14 +11,14 @@ $(document).ready( function() {
 
 	// global object to store all parameters: braille dimensions are standards
 	let braille = { 
-		marginWidth: 10, 
-		marginHeight: 10, 
-		paperWidth: 210, 
+		marginWidth: 3, 
+		marginHeight: 5, 
+		paperWidth: 175, 
 		paperHeight: 290, 
-		letterWidth: 2.54, 
+		letterWidth: 2.3, 
 		dotRadius: 1.25, 
 		letterPadding: 3.75, 
-		linePadding: 5.3, 
+		linePadding: 3, 
 		headDownPosition: -2.0, 
 		headUpPosition: 10, 
 		speed: 4000, 
