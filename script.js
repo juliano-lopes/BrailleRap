@@ -656,7 +656,7 @@ $(document).ready( function() {
 		a.click(); // Trigger a click on the element
 		a.remove();
 
-	}}, 'saveOptimGCode').name('Save Otpim GCode')
+	}}, 'saveOptimGCode').name('Download GCode')
 	
 	createController('svgStep', 0, 100, null, svgFolder, 'SVG step');
 	createController('svgDots', null, null , null, svgFolder, 'SVG dots');
