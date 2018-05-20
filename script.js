@@ -59,6 +59,7 @@ $(document).ready( function() {
 	}
 	
 	var GCODEdotposition = [];
+	var GCODEsvgdotposition = [];
 	
 	let latinToBraille = new Map(); 		// get braille dot indices from char
 	let dotMap = null;					// get dot order from x, y dot coordinates
@@ -146,6 +147,14 @@ $(document).ready( function() {
 		return gcodeprintdot ();
 	}
 	
+	let gcodeGraphDotCached = function ()
+	{
+		if (xhead != null && yhead != null)
+			GCODEsvgdotposition.push (new DotPosition (xhead,yhead));
+		
+		return gcodeprintdot ();
+	}
+	
 	let buildoptimizedgcode = function ()
 	{
 		var sortedpositions = [];
@@ -178,6 +187,14 @@ $(document).ready( function() {
 			codestr += gcodeprintdot ();
 		}
 		
+		// print svg
+		for (i=0; i < GCODEsvgdotposition.length; i++)
+		{
+			codestr += gcodeMoveTo (GCODEsvgdotposition[i].x, GCODEsvgdotposition[i].y);
+			codestr += gcodeprintdot ();
+		}
+		
+		
 		codestr += gcodeMoveTo (0,290);
 		codestr += gcodeMotorOff ();
 		return (codestr);
@@ -188,8 +205,8 @@ $(document).ready( function() {
 	let dotAt = (point, gcode, bounds, lastDot)=> {
 		let px = braille.invertX ? -point.x : braille.paperWidth - point.x;
 		let py = braille.invertY ? -point.y : braille.paperHeight - point.y;
-		gcode.code += gcodeMoveTo(braille.mirrorX ? -px : px, braille.mirrorY ? -py : py)
-		
+		gcode.code += gcodeMoveToCached(braille.mirrorX ? -px : px, braille.mirrorY ? -py : py)
+		gcodeGraphDotCached(braille.mirrorX ? -px : px, braille.mirrorY ? -py : py)
 		// move printer head
 		gcode.code += gcodeMoveTo(null, null, braille.headDownPosition)
 		if(braille.svgDots || lastDot) {
@@ -582,6 +599,7 @@ $(document).ready( function() {
 	divJ = $("<input data-name='file-selector' type='file' class='form-control' name='file[]'  accept='image/svg+xml'/>")
 
 	let importSVG = (event)=> {
+		GCODEsvgdotposition = [];
 		svgButton.name('Clear SVG')
 		svg = paper.project.importSVG(event.target.result)
 		svg.strokeScaling = false

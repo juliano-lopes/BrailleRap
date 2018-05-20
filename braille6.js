@@ -91,7 +91,7 @@ languages['6 dots'] = {
 		"ü": [1, 2, 5, 6],
 		
 		"¨": [1, 3], // Majuscule NatBraille
-		"`": [1, 3], // Chiffres NatBraille
+		"`": [3, 4,5,6], // Chiffres NatBraille
 		
 		
 		
