@@ -232,10 +232,11 @@ $(document).ready( function() {
 				item = path
 			}
 		}
-		if((item.className == 'Path' || item.className == 'CompoundPath') && item.strokeWidth > 0) {
+		if((item.className == 'Path' ||
+			item.className == 'CompoundPath') && item.strokeWidth > 0) {
 			let path = item
 			if(path.segments != null) {
-				for(let i=0 ; i<path.length ; i+=braille.svgStep) {
+				for(let i=0 ; i < path.length ; i  += braille.svgStep) {
 					dotAt(path.getPointAt(i), gcode, bounds, i + braille.svgStep >= path.length)
 				}
 			}
@@ -306,7 +307,14 @@ $(document).ready( function() {
 	
 	// Generates code
 	let svgToGCode = function(svg, gcode) {
+		//svg.scaling = mmPerPixels
 		plotItem(svg, gcode, svg.bounds)
+		//svg.scaling =1;// mmPerPixels
+		if (GCODEsvgdotposition != null && GCODEsvgdotposition.length > 0)
+			GCODEsvgdotposition.sort (function (a,b) {
+				if (a.y == b.y) return (a.x - b.x);
+				return (a.y - b.y);
+			})
 	}
 
 	// Draw braille and generate gcode
@@ -481,7 +489,8 @@ $(document).ready( function() {
 			
 			svg.scaling = 1 / mmPerPixels
 			svgToGCode(svg, gcodeObject)
-			svg.scaling = mmPerPixels
+			svg.scaling = 1; //mmPerPixels
+			
 			gcode = gcodeObject.code
 		}
 
@@ -525,8 +534,6 @@ $(document).ready( function() {
 		}
 
 		// Read in braille description file
-		// latinToBraille.set('a', [1, 2]);
-		// latinToBraille.set('b', [1, 4, 5]);
 		let brailleJSON = languages[braille.language].latinToBraille
 		
 		for(let char in brailleJSON) {
@@ -605,8 +612,11 @@ $(document).ready( function() {
 		svg.strokeScaling = false
 		svg.pivot = svg.bounds.topLeft
 		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth
-		svg.scaling = mmPerPixels
+		
+		svg.scaling = mmPerPixels;
+		
 		brailleToGCode()
+		svg.scaling = 1.0;
 		svg.sendToBack()
 	}
 
