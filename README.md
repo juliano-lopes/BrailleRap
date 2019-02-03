@@ -6,7 +6,7 @@ The [application](https://crocsg.github.io/BrailleRap/).
 
 BrailleRAPSP repo is here https://github.com/BrailleRapSP/BrailleRapSP
 
-BrailleRAPSP alsa have a web site http://www.braillerap.com
+BrailleRap-SP also have a web site http://www.braillerap.com
 
 ### Contribution
 
