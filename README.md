@@ -1,11 +1,12 @@
 ## Braille*Rap*
 
-Emboss Braille with a BrailleRapSP!
+Emboss Braille with a BrailleRapSP! This is a modified version of original ArthurSW work https://github.com/arthursw/BrailleRap to handle the Braille printer BrailleRapSP. The main modification is that ArturSW version use a motor for the Z axis, BrailleRAP-SP use an electro-magnet and don't have a Z axis. So the G-CODE is slightly different, and not portable !
 
 The [application](https://crocsg.github.io/BrailleRap/).
 
-The [documentation](Documentation/documentation-fr.md) in french ([including a video demo](Documentation/img/20161020_VIDEO_FABRIKARIUM_320.gif)).
+BrailleRAPSP repo is here https://github.com/BrailleRapSP/BrailleRapSP
 
+BrailleRap-SP also have a web site http://www.braillerap.com
 
 ### Contribution
 
