@@ -36,6 +36,7 @@ $(document).ready( function() {
 		language: "6 dots",	
 		GCODEup: 'M3 S0',
 		GCODEdown: 'M3 S1',
+		usedotgrid: false,
 		
 	};
 
@@ -158,7 +159,17 @@ $(document).ready( function() {
 	let buildoptimizedgcode = function ()
 	{
 		var sortedpositions = [];
+		var gridsizex = Math.floor(braille.paperWidth / braille.svgStep);
+		var gridsizey = Math.floor (braille.paperHeight / braille.svgStep);
 		
+		console.log (gridsizex);
+		//var dotgridint[gridsizex][gridsizey];
+		var dotgrid = Array(gridsizex);
+		for (i = 0;i < gridsizex; i++)
+		{
+			dotgrid[i] = new Array (gridsizey);
+			dotgrid[i].fill (0);
+		}
 		codestr = gcodeHome ();
 		//codestr += gcodeSetAbsolutePositioning();
 		
@@ -181,17 +192,39 @@ $(document).ready( function() {
 		
 		console.log("sorted positions:" + sortedpositions.length);
 		
+		if (braille.usedotgrid == true)
+			console.log ("filtering dot neighbor");
+		
 		for (i = 0; i < sortedpositions.length; i++)
 		{
 			codestr += gcodeMoveTo (sortedpositions[i].x, sortedpositions[i].y);
 			codestr += gcodeprintdot ();
+			dotgrid[Math.floor(sortedpositions[i].x / svgStep)][Math.floor(sortedpositions[i].y/svgStep)] = 1;
 		}
 		
 		// print svg
 		for (i=0; i < GCODEsvgdotposition.length; i++)
 		{
-			codestr += gcodeMoveTo (GCODEsvgdotposition[i].x, GCODEsvgdotposition[i].y);
-			codestr += gcodeprintdot ();
+			var gx = Math.floor (GCODEsvgdotposition[i].x / braille.svgStep);
+			var gy = Math.floor (GCODEsvgdotposition[i].y / braille.svgStep);
+			
+			if (gx < 0 || gx >= gridsizex)
+				continue;
+			if (gy < 0 || gy >= gridsizey)
+				continue;
+			
+			console.log ("gx " + gx + " gy " + gy);
+			
+			if (dotgrid[gx][gy] == 0 && braille.usedotgrid == true)
+			{
+				codestr += gcodeMoveTo (GCODEsvgdotposition[i].x, GCODEsvgdotposition[i].y);
+				codestr += gcodeprintdot ();
+				dotgrid[gx][gy] = 1;
+			}
+			else
+			{
+				console.log ("dot rejected")
+			}
 		}
 		
 		
@@ -454,11 +487,7 @@ $(document).ready( function() {
 							//GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy));
 						}
 						
-						// move printer head
-						//gcode += gcodeMoveTo(null, null, headDownPosition)
-						//gcode += gcodeMoveTo(null, null, headUpPosition)
-						//gcode += braille.GCODEdown + ';\r\n';
-						//gcode += braille.GCODEup + ';\r\n';
+						// print dot at position
 						gcode += gcodePrintDotCached ();
 						
 					}
@@ -589,6 +618,7 @@ $(document).ready( function() {
 	createController('goToZero', null, null, null, printerSettingsFolder, 'Go to zero');
 	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
 	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
+	createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
 	
 	printerSettingsFolder.open();
 
