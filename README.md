@@ -1,15 +1,17 @@
 ## Braille*Rap*
-
+for indian languages now supoort devnagari (hindi,marathi,nepali) 
 Emboss Braille with a 3D printer!
 
-The [application](https://arthursw.github.io/BrailleRap/).
+The [application] https://github.com/AvinashPudale/BrailleRap
 
 The [documentation](Documentation/documentation-fr.md) in french ([including a video demo](Documentation/img/20161020_VIDEO_FABRIKARIUM_320.gif)).
 
 
 ### Contribution
 
-You can modify and/or add braille language files (braille6.js, braille8new.js, braille8old.js).
+You can modify and/or add braille language files (braille6.js, braille8new.js, braille8old.js, devnagrinumbers.js).
+ 
+ edit devnagrinumbers.js for numbers and custom indices
 
 Those are javascript files, not JSON, to be able to include them in the index.html file when working offline without a server.
 
