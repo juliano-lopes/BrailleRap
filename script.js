@@ -228,7 +228,7 @@ $(document).ready( function() {
 		}
 		
 		
-		codestr += gcodeMoveTo (0,290);
+		codestr += gcodeMoveTo (0,braille.paperHeight);
 		codestr += gcodeMotorOff ();
 		return (codestr);
 	}
@@ -352,6 +352,7 @@ $(document).ready( function() {
 
 	// Draw braille and generate gcode
 	let brailleToGCode = function() {
+		debugger;
 		let is8dot = braille.language.indexOf("8 dots") >= 0
 
 		// Compute the pixel to millimeter ratio 
@@ -396,7 +397,7 @@ $(document).ready( function() {
 		bounds.strokeColor = 'black';
 
 		let isWritingNumber = false;
-
+		let isSpecialchar =false;
 		let textCopy = '' + text
 		let textGroup = new Group()
 
@@ -426,9 +427,9 @@ $(document).ready( function() {
 			}
 			
 			let indices = latinToBraille.get(char);
-
+			debugger;
 			// handle special cases:
-			if(!isWritingNumber && !isNaN(parseInt(char))) { 			// if we are not in a number sequence and char is a number: add prefix and enter number sequence
+			if(!isWritingNumber && !isNaN(parseInt(compairCharAgaistDevnagriNumber(char)))) { 			// if we are not in a number sequence and char is a number: add prefix and enter number sequence
 				indices = numberPrefix;
 				i--; 													// we will reread the same character
 				isWritingNumber = true;
@@ -439,6 +440,12 @@ $(document).ready( function() {
 				textCopy = replaceAt(textCopy, i, textCopy[i].toLowerCase());
 				i--;
 			}
+			 if(!isSpecialchar && getPrefixforSpecialcharacter(char).length>0)
+			 {
+				indices = getPrefixforSpecialcharacter(char);
+				i--; 													// we will reread the same character
+				isSpecialchar = true;
+			 }
 
 			// compute corresponding printer coordinates
 			let gx = braille.invertX ? -currentX : braille.paperWidth - currentX;
@@ -690,7 +697,9 @@ $(document).ready( function() {
 	divJ.change(handleFileSelect)
 
 	// Add download button (to get a text file of the gcode)
-	/*
+	/* 
+	* hide standard gcode download
+	*
 	gui.add({saveGCode: function(){
 		var a = document.body.appendChild(
 			document.createElement("a")
