@@ -163,7 +163,7 @@ $(document).ready( function() {
 		var gridsizey = Math.floor (braille.paperHeight / braille.svgStep);
 		
 		console.log (gridsizex);
-		//var dotgridint[gridsizex][gridsizey];
+		
 		var dotgrid = Array(gridsizex);
 		for (i = 0;i < gridsizex; i++)
 		{
@@ -171,17 +171,16 @@ $(document).ready( function() {
 			dotgrid[i].fill (0);
 		}
 		codestr = gcodeHome ();
-		//codestr += gcodeSetAbsolutePositioning();
 		
-		// gcode += gcodeResetPosition(0, 0, 0)
+		
+		
 		codestr += gcodeSetSpeed(braille.speed);
-		//codestr += 'G92 Y0.0;\r\n';
-		//codestr += 'G92 X0.0;\r\n';
+		
 		
 		if(braille.goToZero) {
 			codestr += gcodeMoveTo(0, 0, 0)
 		}
-		//codestr += gcodeMoveTo(0, 0, braille.headUpPosition);
+		
 		
 		GCODEdotposition.sort (function (a,b) {
 			if (a.y == b.y) return (a.x - b.x);
