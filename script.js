@@ -197,11 +197,15 @@ $(document).ready( function() {
 		
 		for (i = 0; i < sortedpositions.length; i++)
 		{
+			
 			codestr += gcodeMoveTo (sortedpositions[i].x, sortedpositions[i].y);
 			codestr += gcodeprintdot ();
-			dotgrid[Math.floor(sortedpositions[i].x / svgStep)][Math.floor(sortedpositions[i].y/svgStep)] = 1;
+			//console.log ("updategrid");
+			//dotgrid[Math.floor(sortedpositions[i].x / svgStep)][Math.floor(sortedpositions[i].y/svgStep)] = 1;
+			//console.log ("updategrid done");
 		}
 		
+		//console.log (codestr);
 		// print svg
 		for (i=0; i < GCODEsvgdotposition.length; i++)
 		{
@@ -618,7 +622,7 @@ $(document).ready( function() {
 	createController('goToZero', null, null, null, printerSettingsFolder, 'Go to zero');
 	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
 	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
-	createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
+	//createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
 	
 	printerSettingsFolder.open();
 
