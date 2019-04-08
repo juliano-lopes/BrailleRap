@@ -200,9 +200,17 @@ $(document).ready( function() {
 			
 			codestr += gcodeMoveTo (sortedpositions[i].x, sortedpositions[i].y);
 			codestr += gcodeprintdot ();
-			//console.log ("updategrid");
-			//dotgrid[Math.floor(sortedpositions[i].x / svgStep)][Math.floor(sortedpositions[i].y/svgStep)] = 1;
-			//console.log ("updategrid done");
+			
+			// save dot position to filter svg dot
+			var gx = Math.floor (sortedpositions[i].x / braille.svgStep);
+			var gy = Math.floor (sortedpositions[i].y / braille.svgStep);
+			
+			if (gx < 0 || gx >= gridsizex)
+				continue;
+			if (gy < 0 || gy >= gridsizey)
+				continue;
+			dotgrid[gx][gy] = 1;
+			
 		}
 		
 		//console.log (codestr);
@@ -622,7 +630,7 @@ $(document).ready( function() {
 	createController('goToZero', null, null, null, printerSettingsFolder, 'Go to zero');
 	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
 	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
-	//createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
+	createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
 	
 	printerSettingsFolder.open();
 
