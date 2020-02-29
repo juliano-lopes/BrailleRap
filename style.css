@@ -24,11 +24,18 @@ body {
 #paperCanvas {
 	display: inline-block;
 	width: 50%;
-	min-height: 350px;
+	min-height: 500px;
 	float: left;
 }
 
-#gcode-container, #optimize-container{
+#gcode-container{
+	display: inline-block;
+	width: 50%;
+	float: left;
+	visibility: hidden;
+}
+
+#optimize-container{
 	display: inline-block;
 	width: 50%;
 	float: left;
@@ -45,8 +52,14 @@ body {
     min-height: 350px;
     margin-right: 10px;
 }
+#gcode{
+    width: 100%;
+    min-height: 350px;
+    resize: vertical;
+	visibility: hidden;
+}
 
-#gcode, #optimizedgcode{
+#optimizedgcode{
     width: 100%;
     min-height: 350px;
     resize: vertical;

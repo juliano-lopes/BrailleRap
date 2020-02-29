@@ -535,7 +535,7 @@ $(document).ready( function() {
 		if(braille.goToZero) {
 			gcode += gcodeMoveTo(0, 0, 0)
 		}
-		console.log ("gcode", gcode);
+		//console.log ("gcode", gcode);
 		$("#gcode").val(gcode)
 
 		paper.project.activeLayer.addChild(svg)
@@ -628,7 +628,7 @@ $(document).ready( function() {
 	createController('goToZero', null, null, null, printerSettingsFolder, 'Go to zero');
 	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
 	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
-	createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
+
 
 	printerSettingsFolder.open();
 
@@ -747,7 +747,7 @@ $(document).ready( function() {
 		console.log (svg.position.y);
 		brailleToGCode();
 	}
-
+  createController('usedotgrid', null, null, null, svgFolder, 'Dot filter');
 	createController('svgPosX', -500, 500, updateSVGPositionX, svgFolder, 'SVG pos X');
 	createController('svgPosY', -500, 500, updateSVGPositionY, svgFolder, 'SVG pos Y');
 	// createController('svgScale', 0.05, 10, null, svgFolder, 'SVG scale');
