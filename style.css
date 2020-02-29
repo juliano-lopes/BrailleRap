@@ -28,7 +28,7 @@ body {
 	float: left;
 }
 
-#gcode-container {
+#gcode-container, #optimize-container{
 	display: inline-block;
 	width: 50%;
 	float: left;
@@ -46,7 +46,7 @@ body {
     margin-right: 10px;
 }
 
-#gcode {
+#gcode, #optimizedgcode{
     width: 100%;
     min-height: 350px;
     resize: vertical;

@@ -10,34 +10,34 @@ $(document).ready( function() {
 	paper.setup(canvas);
 
 	// global object to store all parameters: braille dimensions are standards
-	let braille = { 
-		marginWidth: 3, 
-		marginHeight: 5, 
-		paperWidth: 175, 
-		paperHeight: 290, 
-		letterWidth: 2.3, 
-		dotRadius: 1.25, 
-		letterPadding: 3.75, 
-		linePadding: 3, 
-		headDownPosition: -2.0, 
-		headUpPosition: 10, 
-		speed: 4000, 
-		delta: false, 
-		goToZero: false, 
-		invertX: true, 
-		invertY: true, 
-		mirrorX: true, 
-		mirrorY: true, 
+	let braille = {
+		marginWidth: 3,
+		marginHeight: 5,
+		paperWidth: 175,
+		paperHeight: 290,
+		letterWidth: 2.3,
+		dotRadius: 1.25,
+		letterPadding: 3.75,
+		linePadding: 3,
+		headDownPosition: -2.0,
+		headUpPosition: 10,
+		speed: 4000,
+		delta: false,
+		goToZero: false,
+		invertX: true,
+		invertY: true,
+		mirrorX: true,
+		mirrorY: true,
 		svgStep: 2,
 		svgDots: true,
 		svgPosX: 0,
 		svgPosY: 0,
 		// svgScale: 1,
-		language: "6 dots",	
+		language: "6 dots",
 		GCODEup: 'M3 S0',
 		GCODEdown: 'M3 S1',
 		usedotgrid: false,
-		
+
 	};
 
 	let pixelMillimeterRatio = null;
@@ -45,23 +45,23 @@ $(document).ready( function() {
 	let text = '';
 	let gcode = '';
 	let sortedgcode = '';
-	
+
 	let xhead = 0;
 	let yhead = 0;
-	
+
 	// Replace a char at index in a string
 	function replaceAt(s, n, t) {
 	    return s.substring(0, n) + t + s.substring(n + 1);
 	}
-	
+
 	function DotPosition (xpos, ypos) {
 		this.x = xpos;
 		this.y = ypos;
 	}
-	
+
 	var GCODEdotposition = [];
 	var GCODEsvgdotposition = [];
-	
+
 	let latinToBraille = new Map(); 		// get braille dot indices from char
 	let dotMap = null;					// get dot order from x, y dot coordinates
 	let numberPrefix = null; 			// the indices of the number prefix of the language
@@ -74,15 +74,15 @@ $(document).ready( function() {
 	{
 		return 'M84;\r\n';
 	}
-	
+
 	let gcodeHome = function ()
 	{
 		str = 'G28 X;\r\n';
 		str += 'G28 Y;\r\n';
-		
-		return str; 
+
+		return str;
 	}
-	
+
 	let gcodeResetPosition = function(X, Y, Z) {
 		return 'G92' + gcodePosition(X, Y, Z);
 	}
@@ -114,56 +114,56 @@ $(document).ready( function() {
 	}
 
 	let gcodeMoveTo = function(X, Y, Z) {
-		
-		
+
+
 		return 'G1' + gcodePosition(X, Y, Z)
-		
+
 	}
-	
+
 	let gcodeMoveToCached = function (X,Y,Z)
 	{
 		if (X != null)
 			xhead = X;
 		if (Y != null)
 			yhead = Y;
-		
+
 		return gcodeMoveTo (X,Y,Z);
 	}
-	
-	
+
+
 	let gcodeprintdot = function () {
-		
-		
+
+
 		let s = braille.GCODEdown + ';\r\n';
 		s += braille.GCODEup + ';\r\n';
-		
+
 		return (s);
 	}
-	
+
 	let gcodePrintDotCached = function ()
 	{
 		if (xhead != null && yhead != null)
 			GCODEdotposition.push (new DotPosition (xhead,yhead));
-		
+
 		return gcodeprintdot ();
 	}
-	
+
 	let gcodeGraphDotCached = function ()
 	{
 		if (xhead != null && yhead != null)
 			GCODEsvgdotposition.push (new DotPosition (xhead,yhead));
-		
+
 		return gcodeprintdot ();
 	}
-	
+
 	let buildoptimizedgcode = function ()
 	{
 		var sortedpositions = [];
 		var gridsizex = Math.floor(braille.paperWidth / braille.svgStep);
 		var gridsizey = Math.floor (braille.paperHeight / braille.svgStep);
-		
-		console.log (gridsizex);
-		
+
+
+
 		var dotgrid = Array(gridsizex);
 		for (i = 0;i < gridsizex; i++)
 		{
@@ -171,90 +171,96 @@ $(document).ready( function() {
 			dotgrid[i].fill (0);
 		}
 		codestr = gcodeHome ();
-		
-		
-		
+
+
+
 		codestr += gcodeSetSpeed(braille.speed);
-		
-		
+
+
 		if(braille.goToZero) {
 			codestr += gcodeMoveTo(0, 0, 0)
 		}
-		
-		
+
+
 		GCODEdotposition.sort (function (a,b) {
 			if (a.y == b.y) return (a.x - b.x);
 			return (a.y - b.y);
 		})
 
 		sortedpositions = gcodesortzigzag (GCODEdotposition);
-		
+
 		console.log("sorted positions:" + sortedpositions.length);
-		
+
 		if (braille.usedotgrid == true)
 			console.log ("filtering dot neighbor");
-		
+
 		for (i = 0; i < sortedpositions.length; i++)
 		{
 			codestr += gcodeMoveTo (sortedpositions[i].x, sortedpositions[i].y);
 			codestr += gcodeprintdot ();
-			dotgrid[Math.floor(sortedpositions[i].x / svgStep)][Math.floor(sortedpositions[i].y/svgStep)] = 1;
+			dotgrid[Math.floor(sortedpositions[i].x / braille.svgStep)][Math.floor(sortedpositions[i].y / braille.svgStep)] = 1;
 		}
-		
+
 		// print svg
 		for (i=0; i < GCODEsvgdotposition.length; i++)
 		{
 			var gx = Math.floor (GCODEsvgdotposition[i].x / braille.svgStep);
 			var gy = Math.floor (GCODEsvgdotposition[i].y / braille.svgStep);
-			
+
 			if (gx < 0 || gx >= gridsizex)
 				continue;
 			if (gy < 0 || gy >= gridsizey)
 				continue;
-			
-			console.log ("gx " + gx + " gy " + gy);
-			
-			if (dotgrid[gx][gy] == 0 && braille.usedotgrid == true)
+
+			if (braille.usedotgrid  == true)
 			{
-				codestr += gcodeMoveTo (GCODEsvgdotposition[i].x, GCODEsvgdotposition[i].y);
-				codestr += gcodeprintdot ();
-				dotgrid[gx][gy] = 1;
+				if (dotgrid[gx][gy] == 0)
+				{
+					codestr += gcodeMoveTo (GCODEsvgdotposition[i].x, GCODEsvgdotposition[i].y);
+					codestr += gcodeprintdot ();
+					dotgrid[gx][gy] = 1;
+				}
+				else
+				{
+					console.log ("dot filtered");
+				}
 			}
 			else
 			{
-				console.log ("dot rejected")
+				codestr += gcodeMoveTo (GCODEsvgdotposition[i].x, GCODEsvgdotposition[i].y);
+				codestr += gcodeprintdot ();
 			}
 		}
-		
-		
+
+
 		codestr += gcodeMoveTo (0,braille.paperHeight);
 		codestr += gcodeMotorOff ();
 		return (codestr);
 	}
-	
+
 
 	// draw SVG
-	let dotAt = (point, gcode, bounds, lastDot)=> {
+	let dotAt = function (point, gcode, bounds, lastDot) {
 		let px = braille.invertX ? -point.x : braille.paperWidth - point.x;
 		let py = braille.invertY ? -point.y : braille.paperHeight - point.y;
 		gcode.code += gcodeMoveToCached(braille.mirrorX ? -px : px, braille.mirrorY ? -py : py)
 		gcodeGraphDotCached(braille.mirrorX ? -px : px, braille.mirrorY ? -py : py)
 		// move printer head
-		gcode.code += gcodeMoveTo(null, null, braille.headDownPosition)
+		gcode.code += gcodeMoveTo(null, null, braille.headDownPosition);
 		if(braille.svgDots || lastDot) {
-			gcode.code += gcodeMoveTo(null, null, braille.headUpPosition)
+			gcode.code += gcodeMoveTo(null, null, braille.headUpPosition);
 		}
 	}
 
-	let itemMustBeDrawn = (item) => {
+	let itemMustBeDrawn = function (item)  {
 		return (item.strokeWidth > 0 && item.strokeColor != null) || item.fillColor != null;
 	}
 
-	let plotItem = (item, gcode, bounds) => {
+	let plotItem = function (item, gcode, bounds)  {
 		if(!item.visible) {
 			return
 		}
-		let matrix = item.globalMatrix
+
 		if(item.className == 'Shape') {
 			let shape = item
 			if(itemMustBeDrawn(shape)) {
@@ -290,24 +296,21 @@ $(document).ready( function() {
 		var dir = 1;
 		var tmp = [];
 		var sorted = [];
-		
+
 		if (positions == null)
 			return (sorted);
-		
+
 		while (e < positions.length)
 		{
 			while ((positions[s].y == positions[e].y) )
 			{
-				console.log("sort pos:" + s + " " + e + " " + positions.length);
 				e++;
-				console.log("sort posa:" + s + " " + e + " " + positions.length);
 				if (e == (positions.length))
 				{
-					console.log("exit loop" + positions.length);
-					break;
+						break;
 				}
 			}
-			console.log("sort pos selected:" + s + " " + e + " " + positions.length);
+
 			//if (e - s >= 0)
 			{
 				for (i = s; i < e; i++)
@@ -318,25 +321,23 @@ $(document).ready( function() {
 					if (a.y == b.y) return ((a.x - b.x) * dir);
 						return (a.y - b.y);
 				})
-				
+
 				for(i = 0; i < tmp.length; i++)
 					sorted.push (tmp[i]);
 				tmp = [];
 				dir = - dir;
-				
-				
+
 				s = e;
-			}	
+			}
 			if (e >= positions.length)
 			{
-					console.log("exit loop end " + e + " "+positions.length);
 					break;
-			}					
+			}
 		}
-		
+
 		return (sorted);
 	}
-	
+
 	// Generates code
 	let svgToGCode = function(svg, gcode) {
 		//svg.scaling = mmPerPixels
@@ -351,10 +352,10 @@ $(document).ready( function() {
 
 	// Draw braille and generate gcode
 	let brailleToGCode = function() {
-		debugger;
+
 		let is8dot = braille.language.indexOf("8 dots") >= 0
 
-		// Compute the pixel to millimeter ratio 
+		// Compute the pixel to millimeter ratio
 		let paperWidth = braille.paperWidth;
 		let paperHeight = braille.paperHeight;
 
@@ -368,7 +369,7 @@ $(document).ready( function() {
 		let finalHeightPixel = 0;
 
 		let pixelMillimeterRatio = Math.min(canvasWidth / paperWidth, canvasHeight / paperHeight)
-		
+
 		// Up / down position of the printer head, in millimeter
 		let headUpPosition = braille.headUpPosition;
 		let headDownPosition = braille.headDownPosition;
@@ -377,6 +378,7 @@ $(document).ready( function() {
 
 		// Start GCode
 		GCODEdotposition = [];
+		GCODEsvgdotposition = [];
 		gcode = gcodeSetAbsolutePositioning();
 		// gcode += gcodeResetPosition(0, 0, 0)
 		gcode += gcodeSetSpeed(braille.speed);
@@ -404,10 +406,10 @@ $(document).ready( function() {
 		for(let i = 0 ; i < textCopy.length ; i++) {
 			let char = textCopy[i]
 
-			// check special cases: 
+			// check special cases:
 			let charIsCapitalLetter = is8dot ? false : /[A-Z]/.test(char)
 			let charIsLineBreak = /\r?\n|\r/.test(char)
-			
+
 			// If char is line break: reset currentX and increase currentY
 			if(charIsLineBreak) {
 				currentY += (is8dot ? 2 : 3) * letterWidth + braille.linePadding;
@@ -419,14 +421,14 @@ $(document).ready( function() {
 				continue;
 			}
 
-			// Check if char exists in map 
+			// Check if char exists in map
 			if(!latinToBraille.has(char.toLowerCase())) {
 				console.log('Character ' + char + ' was not translated in braille.');
 				continue;
 			}
-			
+
 			let indices = latinToBraille.get(char);
-			debugger;
+
 			// handle special cases:
 			if(!isWritingNumber && !isNaN(parseInt(compairCharAgaistDevnagriNumber(char)))) { 			// if we are not in a number sequence and char is a number: add prefix and enter number sequence
 				indices = numberPrefix;
@@ -463,7 +465,7 @@ $(document).ready( function() {
 			// Draw braille char and compute gcode
 			let charGroup = new Group()
 			textGroup.addChild(charGroup)
-			
+
 			// Iterate through all indices
 			for(let y = 0 ; y < (is8dot ? 4 : 3) ; y++) {
 				for(let x = 0 ; x < 2 ; x++) {
@@ -492,10 +494,10 @@ $(document).ready( function() {
 							gcode += gcodeMoveToCached(braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy)
 							//GCODEdotposition.push (new DotPosition (braille.mirrorX ? -gx : gx, braille.mirrorY ? -gy : gy));
 						}
-						
+
 						// print dot at position
 						gcode += gcodePrintDotCached ();
-						
+
 					}
 				}
 			}
@@ -513,7 +515,7 @@ $(document).ready( function() {
 				break;
 			}
 		}
-		
+
 		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth
 
 		// Print the SVG
@@ -521,11 +523,11 @@ $(document).ready( function() {
 			let gcodeObject = {
 				code: gcode
 			}
-			
-			svg.scaling = 1 / mmPerPixels
+
+			//svg.scaling = 1 / mmPerPixels
 			svgToGCode(svg, gcodeObject)
-			svg.scaling = 1; //mmPerPixels
-			
+			svg.scaling = 1;//mmPerPixels;
+
 			gcode = gcodeObject.code
 		}
 
@@ -533,8 +535,9 @@ $(document).ready( function() {
 		if(braille.goToZero) {
 			gcode += gcodeMoveTo(0, 0, 0)
 		}
+		console.log ("gcode", gcode);
 		$("#gcode").val(gcode)
-		
+
 		paper.project.activeLayer.addChild(svg)
 		let printBounds = textGroup.bounds
 		if(svg != null) {
@@ -542,17 +545,18 @@ $(document).ready( function() {
 		}
 		printBounds = printBounds.scale(1 / mmPerPixels)
 		$('#print-size').text(printBounds.width.toFixed(0) + ' x ' + printBounds.height.toFixed(0))
-		
+
 		// print dot position
-		let pstr = GCODEdotposition.length + ' ' +'\r\n' ;				
+		let pstr = GCODEdotposition.length + ' ' +'\r\n' ;
 		for (d = 0; d < GCODEdotposition.length; d++)
 		{
 			pstr += '(' + d + ')' + GCODEdotposition[d].x + ' ' + GCODEdotposition[d].y + '\r\n';
 		}
-		
+
 		sortedgcode = buildoptimizedgcode();
 		$("#dotposition").val (pstr);
 		$("#optimizedgcode").val (sortedgcode);
+
 	}
 
 	brailleToGCode()
@@ -563,14 +567,14 @@ $(document).ready( function() {
 		numberPrefix = languages[braille.language].numberPrefix
 
 		dotMap = languages[braille.language].dotMap
-		
+
 		if(dotMap == null) {
 			throw new Error('Dot eight map.')
 		}
 
 		// Read in braille description file
 		let brailleJSON = languages[braille.language].latinToBraille
-		
+
 		for(let char in brailleJSON) {
 			latinToBraille.set(char, brailleJSON[char])
 		}
@@ -611,7 +615,7 @@ $(document).ready( function() {
 	createController('letterPadding', 1, 30, null, charDimensionsFolder, 'Letter padding');
 	createController('linePadding', 1, 30, null, charDimensionsFolder, 'Line padding');
 	charDimensionsFolder.open();
-	
+
 	let printerSettingsFolder = gui.addFolder('Printer settings');
 	createController('headDownPosition', -150, 150, null, printerSettingsFolder, 'Head down pos.');
 	createController('headUpPosition', -150, 150, null, printerSettingsFolder, 'Head up pos.');
@@ -625,7 +629,7 @@ $(document).ready( function() {
 	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
 	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
 	createController('usedotgrid', null, null, null, printerSettingsFolder, 'Dot filter');
-	
+
 	printerSettingsFolder.open();
 
 	var languageList = []
@@ -648,11 +652,11 @@ $(document).ready( function() {
 		svg.strokeScaling = false
 		svg.pivot = svg.bounds.topLeft
 		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth
-		
-		svg.scaling = mmPerPixels;
-		
+
+		//svg.scaling = mmPerPixels;
+		svg.scaling = 1;
 		brailleToGCode()
-		svg.scaling = 1.0;
+		//svg.scaling = 1.0;
 		svg.sendToBack()
 	}
 
@@ -661,7 +665,7 @@ $(document).ready( function() {
 
 		for (let i = 0; i < files.length; i++) {
 			let file = files.item(i)
-			
+
 			let imageType = /^image\//
 
 			if (!imageType.test(file.type)) {
@@ -673,6 +677,7 @@ $(document).ready( function() {
 			reader.readAsText(file)
 		}
 	}
+
 	let svgFolder = gui.addFolder('SVG');
 	svgButton = svgFolder.add({importSVG: ()=> {
 		if(svg != null) {
@@ -680,10 +685,11 @@ $(document).ready( function() {
 			svg.remove()
 			svg = null
 			brailleToGCode()
+
 		} else {
 			divJ.click()
 		}
-		
+
 	} }, 'importSVG')
 	svgButton.name('Import SVG')
 
@@ -691,12 +697,13 @@ $(document).ready( function() {
 		event.stopPropagation()
 		return -1;
 	})
+
 	$(svgButton.domElement).append(divJ)
 	divJ.hide()
 	divJ.change(handleFileSelect)
 
 	// Add download button (to get a text file of the gcode)
-	/* 
+	/*
 	* hide standard gcode download
 	*
 	gui.add({saveGCode: function(){
@@ -723,19 +730,24 @@ $(document).ready( function() {
 		a.remove();
 
 	}}, 'saveOptimGCode').name('Download GCode')
-	
+
 	createController('svgStep', 0, 100, null, svgFolder, 'SVG step');
 	createController('svgDots', null, null , null, svgFolder, 'SVG dots');
+
 	let updateSVGPositionX = (value) => {
-		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth
-		svg.position.x = value * mmPerPixels
-		brailleToGCode()
+		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth;
+		svg.position.x = value;// * mmPerPixels;
+		console.log (svg.position.x);
+		brailleToGCode();
 	}
+
 	let updateSVGPositionY = (value) => {
-		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth
-		svg.position.y = value * mmPerPixels
-		brailleToGCode()
+		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth;
+		svg.position.y = value;// * mmPerPixels;
+		console.log (svg.position.y);
+		brailleToGCode();
 	}
+
 	createController('svgPosX', -500, 500, updateSVGPositionX, svgFolder, 'SVG pos X');
 	createController('svgPosY', -500, 500, updateSVGPositionY, svgFolder, 'SVG pos Y');
 	// createController('svgScale', 0.05, 10, null, svgFolder, 'SVG scale');
@@ -755,5 +767,3 @@ $(document).ready( function() {
 	})
 
 })
-
-

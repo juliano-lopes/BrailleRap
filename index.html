@@ -18,7 +18,7 @@
 	<script src="braille6india.js"></script>
     <script src="braille8old.js"></script>
     <script src="braille8new.js"></script>
-     <script src="devnagrinumbers.js"></script>
+    <script src="devnagrinumbers.js"></script>
     <script src="script.js"></script>
 
 
@@ -42,12 +42,12 @@
 
     <div id="output">
       <canvas id="paperCanvas" resize hdpi></canvas>
-      <div id="gcode-container"><textarea id="gcode"></textarea></div>
+      <div style="display: inline-block;" id="optimize-container"><textarea id="optimizedgcode"></textarea></div>
       <div>Print size: <span id="print-size">--</span></div>
     </div>
     <div id="info">
-          <div style="display: inline-block;" id="pos-container"><textarea id="dotposition"></textarea></div>
-		  <div style="display: inline-block;" id="optimize-container"><textarea id="optimizedgcode"></textarea></div>
+          <div  style="display: inline-block;" id="pos-container"><textarea id="dotposition"></textarea></div>
+		  <div style="display: inline-block;" id="gcode-container"><textarea id="gcode"></textarea></div>
     </div>
   </body>
   
