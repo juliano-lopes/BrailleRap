@@ -114,10 +114,7 @@ $(document).ready( function() {
 	}
 
 	let gcodeMoveTo = function(X, Y, Z) {
-
-
 		return 'G1' + gcodePosition(X, Y, Z)
-
 	}
 
 	let gcodeMoveToCached = function (X,Y,Z)
@@ -132,8 +129,6 @@ $(document).ready( function() {
 
 
 	let gcodeprintdot = function () {
-
-
 		let s = braille.GCODEdown + ';\r\n';
 		s += braille.GCODEup + ';\r\n';
 
@@ -376,6 +371,7 @@ $(document).ready( function() {
 
 		project.clear();
 
+
 		// Start GCode
 		GCODEdotposition = [];
 		GCODEsvgdotposition = [];
@@ -392,10 +388,20 @@ $(document).ready( function() {
 		let currentY = braille.marginHeight;
 		let letterWidth = braille.letterWidth;
 
-		// draw bounds
-		let bounds = new Path.Rectangle(0, 0, Math.max(braille.paperWidth * pixelMillimeterRatio, 0), Math.max(0, braille.paperHeight * pixelMillimeterRatio));
+		// draw page bounds
+		//let bounds = new Path.Rectangle(0, 0, Math.max(braille.paperWidth * pixelMillimeterRatio, 0), Math.max(0, braille.paperHeight * pixelMillimeterRatio));
+
+
+		paper.project.activeLayer.applyMatrix = false;
+		paper.project.activeLayer.scaling = pixelMillimeterRatio;
+		let bounds = new Path.Rectangle(0, 0, Math.max(braille.paperWidth , 0), Math.max(0, braille.paperHeight ));
 		bounds.strokeWidth = 1;
-		bounds.strokeColor = 'black';
+		bounds.strokeColor = 'blue';
+
+
+		//let test = new Path.Circle (new Point(210/2 , 290/2 ), (50) );
+		//test.strokeWidth = 3;
+		//test.strokeColor = 'black';
 
 		let isWritingNumber = false;
 		let isSpecialchar =false;
@@ -473,7 +479,8 @@ $(document).ready( function() {
 					if(indices.indexOf(dotMap[x][y]) != -1) { 			// if index exists in current char: draw the dot
 						let px = currentX + x * letterWidth
 						let py = currentY + y * letterWidth
-						let dot = new Path.Circle(new Point(px * pixelMillimeterRatio, py * pixelMillimeterRatio), (braille.dotRadius / 2) * pixelMillimeterRatio);
+						//let dot = new Path.Circle(new Point(px * pixelMillimeterRatio, py * pixelMillimeterRatio), (braille.dotRadius / 2) * pixelMillimeterRatio);
+						let dot = new Path.Circle(new Point(px , py ), (braille.dotRadius / 2) );
 						dot.fillColor = 'black';
 
 						charGroup.addChild(dot);

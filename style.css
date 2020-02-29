@@ -24,7 +24,7 @@ body {
 #paperCanvas {
 	display: inline-block;
 	width: 50%;
-	min-height: 500px;
+	min-height: 800px;
 	float: left;
 }
 
@@ -61,7 +61,7 @@ body {
 
 #optimizedgcode{
     width: 100%;
-    min-height: 350px;
+    min-height: 600px;
     resize: vertical;
 }
 
