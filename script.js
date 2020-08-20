@@ -609,32 +609,32 @@ $(document).ready( function() {
 		return controller
 	}
 
-	let paperDimensionsFolder = gui.addFolder('Paper dimensions');
-	createController('paperWidth', 1, 1000, null, paperDimensionsFolder, 'Paper width');
-	createController('paperHeight', 1, 1000, null, paperDimensionsFolder, 'Paper height');
-	createController('marginWidth', 0, 100, null, paperDimensionsFolder, 'Margin width');
-	createController('marginHeight', 0, 100, null, paperDimensionsFolder, 'Margin height');
+	let paperDimensionsFolder = gui.addFolder('Dimensões do papel');
+	createController('paperWidth', 1, 1000, null, paperDimensionsFolder, 'Largura do papel');
+	createController('paperHeight', 1, 1000, null, paperDimensionsFolder, 'Altura do papel');
+	createController('marginWidth', 0, 100, null, paperDimensionsFolder, 'Largura da margem');
+	createController('marginHeight', 0, 100, null, paperDimensionsFolder, 'Altura da margem');
 	paperDimensionsFolder.open();
 
-	let charDimensionsFolder = gui.addFolder('Char dimensions');
-	createController('letterWidth', 1, 100, null, charDimensionsFolder, 'Letter width');
-	createController('dotRadius', 1, 30, null, charDimensionsFolder, 'Dot radius');
-	createController('letterPadding', 1, 30, null, charDimensionsFolder, 'Letter padding');
-	createController('linePadding', 1, 30, null, charDimensionsFolder, 'Line padding');
+	let charDimensionsFolder = gui.addFolder('Dimensões da letra');
+	createController('letterWidth', 1, 100, null, charDimensionsFolder, 'Largura da letra');
+	createController('dotRadius', 1, 30, null, charDimensionsFolder, 'Diâmetro do ponto braille');
+	createController('letterPadding', 1, 30, null, charDimensionsFolder, 'Distância entre as letras');
+	createController('linePadding', 1, 30, null, charDimensionsFolder, 'Distância entre as linhas');
 	charDimensionsFolder.open();
 
-	let printerSettingsFolder = gui.addFolder('Printer settings');
-	createController('headDownPosition', -150, 150, null, printerSettingsFolder, 'Head down pos.');
-	createController('headUpPosition', -150, 150, null, printerSettingsFolder, 'Head up pos.');
-	createController('speed', 0, 6000, null, printerSettingsFolder, 'Speed');
-	createController('delta', null, null, null, printerSettingsFolder, 'Delta printer');
-	createController('invertX', null, null, null, printerSettingsFolder, 'Negative X');
-	createController('invertY', null, null, null, printerSettingsFolder, 'Negative Y');
-	createController('mirrorX', null, null, null, printerSettingsFolder, 'Mirror X');
-	createController('mirrorY', null, null, null, printerSettingsFolder, 'Mirror Y');
-	createController('goToZero', null, null, null, printerSettingsFolder, 'Go to zero');
-	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Up');
-	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE down');
+	let printerSettingsFolder = gui.addFolder('Configurações da impressora');
+	createController('headDownPosition', -150, 150, null, printerSettingsFolder, 'Posição baixa da cabeça');
+	createController('headUpPosition', -150, 150, null, printerSettingsFolder, 'Posição alta da cabeça');
+	createController('speed', 0, 6000, null, printerSettingsFolder, 'Velocidade');
+	createController('delta', null, null, null, printerSettingsFolder, 'Impressora delta');
+	createController('invertX', null, null, null, printerSettingsFolder, 'X negativo');
+	createController('invertY', null, null, null, printerSettingsFolder, 'Y negativo');
+	createController('mirrorX', null, null, null, printerSettingsFolder, 'Espelho X');
+	createController('mirrorY', null, null, null, printerSettingsFolder, 'Espelho Y');
+	createController('goToZero', null, null, null, printerSettingsFolder, 'Ir para zero');
+	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCode alto');
+	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCode baixo');
 
 
 	printerSettingsFolder.open();
@@ -647,7 +647,7 @@ $(document).ready( function() {
 	createController('language', languageList, null, function() {
 		initializeLatinToBraille();
 		brailleToGCode();
-	}, null, 'Language');
+	}, null, 'Braille utilizado');
 
 	// Import SVG to add shapes
 	divJ = $("<input data-name='file-selector' type='file' class='form-control' name='file[]'  accept='image/svg+xml'/>")
@@ -698,7 +698,7 @@ $(document).ready( function() {
 		}
 
 	} }, 'importSVG')
-	svgButton.name('Import SVG')
+	svgButton.name('Importar SVG')
 
 	divJ.click((event)=>{
 		event.stopPropagation()
@@ -736,10 +736,10 @@ $(document).ready( function() {
 		a.click(); // Trigger a click on the element
 		a.remove();
 
-	}}, 'saveOptimGCode').name('Download GCode')
+	}}, 'saveOptimGCode').name('Baixar arquivo GCode')
 
-	createController('svgStep', 0, 100, null, svgFolder, 'SVG step');
-	createController('svgDots', null, null , null, svgFolder, 'SVG dots');
+	createController('svgStep', 0, 100, null, svgFolder, 'Passo SVG');
+	createController('svgDots', null, null , null, svgFolder, 'Pontos do SVG');
 
 	let updateSVGPositionX = (value) => {
 		let mmPerPixels =  paper.view.bounds.width / braille.paperWidth;
@@ -754,9 +754,9 @@ $(document).ready( function() {
 		console.log (svg.position.y);
 		brailleToGCode();
 	}
-  createController('usedotgrid', null, null, null, svgFolder, 'Dot filter');
-	createController('svgPosX', -500, 500, updateSVGPositionX, svgFolder, 'SVG pos X');
-	createController('svgPosY', -500, 500, updateSVGPositionY, svgFolder, 'SVG pos Y');
+  createController('usedotgrid', null, null, null, svgFolder, 'Filtro de pontos');
+	createController('svgPosX', -500, 500, updateSVGPositionX, svgFolder, 'Posição X do SVG');
+	createController('svgPosY', -500, 500, updateSVGPositionY, svgFolder, 'Posição Y do SVG');
 	// createController('svgScale', 0.05, 10, null, svgFolder, 'SVG scale');
 
 	// Update all when text changes
