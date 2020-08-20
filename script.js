@@ -630,11 +630,11 @@ $(document).ready( function() {
 	createController('delta', null, null, null, printerSettingsFolder, 'Impressora delta');
 	createController('invertX', null, null, null, printerSettingsFolder, 'X negativo');
 	createController('invertY', null, null, null, printerSettingsFolder, 'Y negativo');
-	createController('mirrorX', null, null, null, printerSettingsFolder, 'Espelho X');
-	createController('mirrorY', null, null, null, printerSettingsFolder, 'Espelho Y');
+	createController('mirrorX', null, null, null, printerSettingsFolder, 'Espelhar X');
+	createController('mirrorY', null, null, null, printerSettingsFolder, 'Espelhar Y');
 	createController('goToZero', null, null, null, printerSettingsFolder, 'Ir para zero');
-	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCode alto');
-	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCode baixo');
+	createController('GCODEup', null, null, null, printerSettingsFolder, 'GCODE Subir');
+	createController('GCODEdown', null, null, null, printerSettingsFolder, 'GCODE Baixar');
 
 
 	printerSettingsFolder.open();
@@ -647,7 +647,7 @@ $(document).ready( function() {
 	createController('language', languageList, null, function() {
 		initializeLatinToBraille();
 		brailleToGCode();
-	}, null, 'Braille utilizado');
+	}, null, 'Variação Braille utilizada');
 
 	// Import SVG to add shapes
 	divJ = $("<input data-name='file-selector' type='file' class='form-control' name='file[]'  accept='image/svg+xml'/>")
