@@ -33,7 +33,7 @@ $(document).ready( function() {
 		svgPosX: 0,
 		svgPosY: 0,
 		// svgScale: 1,
-		language: "6 dots",
+		language: "6 pontos",
 		GCODEup: 'M3 S0',
 		GCODEdown: 'M3 S1',
 		usedotgrid: false,
@@ -348,7 +348,7 @@ $(document).ready( function() {
 	// Draw braille and generate gcode
 	let brailleToGCode = function() {
 
-		let is8dot = braille.language.indexOf("8 dots") >= 0
+		let is8dot = braille.language.indexOf("8 pontos") >= 0
 
 		// Compute the pixel to millimeter ratio
 		let paperWidth = braille.paperWidth;
