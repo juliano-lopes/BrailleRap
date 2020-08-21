@@ -33,7 +33,7 @@ $(document).ready( function() {
 		svgPosX: 0,
 		svgPosY: 0,
 		// svgScale: 1,
-		language: "6 pontos",
+		language: "6 pontos do Brasil",
 		GCODEup: 'M3 S0',
 		GCODEdown: 'M3 S1',
 		usedotgrid: false,
@@ -413,8 +413,9 @@ $(document).ready( function() {
 			let char = textCopy[i]
 
 			// check special cases:
-			let charIsCapitalLetter = is8dot ? false : /[A-Z]/.test(char)
-			let charIsLineBreak = /\r?\n|\r/.test(char)
+			//let charIsCapitalLetter = is8dot ? false : /[A-Z]/.test(char)
+			let charIsCapitalLetter = is8dot ? false : isUpperCase(char);
+		let charIsLineBreak = /\r?\n|\r/.test(char)
 
 			// If char is line break: reset currentX and increase currentY
 			if(charIsLineBreak) {
@@ -566,6 +567,10 @@ $(document).ready( function() {
 
 	}
 
+	let isUpperCase = function(char){
+let simbols = ["Á", "Â", "Ã", "À", "É", "Ê", "Í", "Ó", "Ô", "Õ", "Ú", "Ç"];
+	return ((/[A-Z]/.test(char)) || (simbols.indexOf(char) != -1));
+}
 	brailleToGCode()
 
 	// initializeLatinToBraille from corresponding language file
