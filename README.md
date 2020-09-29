@@ -5,7 +5,7 @@
 Esta é uma versão modificada do trabalho original de [ArthurSW](https://github.com/arthursw/BrailleRap) para lidar com a impressora Braille do projeto [BrailleRapSP](http://www.braillerap.com).
 A principal modificação é que a versão ArturSW usa um motor para o eixo Z, o BrailleRAP-SP usa um eletroímã e não possui um eixo Z. Portanto, o G-CODE é ligeiramente diferente e não é portátil!
 
-[Ir para documentação](#doc)
+[Ir para documentação](#documentos)
 
 
 Graças a Avinash Pudale, o aplicativo agora suporta
@@ -37,7 +37,8 @@ o apoio a pessoas com síndrome de Down e suas famílias; a promoção da educa�
 * Isabella Queiroz Paes
 * Juliano Lopes da Costa
 
-### <a name="doc"></a>Documentação BrailleRapBR
+### Documentos
+Segue arquivos da documentação BrailleRapBr:
 [Documentação em inglês](Documentation/documentation-en.md)
 
 <table>
