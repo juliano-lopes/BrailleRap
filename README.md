@@ -32,3 +32,6 @@ o apoio a pessoas com síndrome de Down e suas famílias; a promoção da educa�
 * Lucas Dominique da Silva
 * Isabella Queiroz Paes
 * Juliano Lopes da Costa
+
+### Documentação BrailleRap
+[Documentação em inglês](Documentation/documentation-en.md)
