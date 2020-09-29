@@ -35,3 +35,32 @@ o apoio a pessoas com síndrome de Down e suas famílias; a promoção da educa�
 
 ### Documentação BrailleRap
 [Documentação em inglês](Documentation/documentation-en.md)
+
+<table>
+<tr><th>Qt</th> <th>Tipo</th></tr>
+<tr><td>4</td><td>   Trilho Linear de 8 mm de diâmetro 330 mm de comprimento</td></tr>
+<tr><td>1</td><td>   Trilho linear de 8 mm de diâmetro 365 mm de comprimento</td></tr>
+<tr><td>1</td><td>   Trilho linear de 8 mm de diâmetro 100 mm de comprimento</td></tr>
+
+<tr><td>6</td><td>   Bucha linear de polímero RJ4JP-01-08</td></tr>
+
+<tr><td>3</td><td>   GT2 polia 20 dentes 8 mm furo</td></tr>
+<tr><td>2</td><td>   GT2 livre polia 20 dentes com furo de 3 mm (com rolamento)</td></tr>
+
+<tr><td>2</td><td>   Rolamento linear KP08 para eixo linear de 8 mm</td></tr>
+<tr><td>2</td><td>   Rolamento vertical KFL08 para eixo linear de 8 mm</td></tr>
+
+<tr><td>1</td><td>   Acoplamento 5mm / 8mm</td></tr>
+
+<tr><td>2</td><td>   Nema 17 40 N / cm com fio</td></tr>
+
+<tr><td>1</td><td>   Correia GT2 fechada 200 mm</td></tr>
+<tr><td>2</td><td>   Correia GT2 630 mm</td></tr>
+
+<tr><td>2</td><td>   O-ring de 15,1 mm de diâmetro interno 20,5 mm de diâmetro externo (15,1 x 20,5 x 2,7)</td></tr>
+</table>
+
+<img src="Documentation/img/20161020_175141_.jpg" align="center">
+
+### Documentação em português
+<img src="Documentation/img/20161020_175141_.jpg">
