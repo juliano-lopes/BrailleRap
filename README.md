@@ -36,7 +36,7 @@ o apoio a pessoas com síndrome de Down e suas famílias; a promoção da educa�
 * Isabella Queiroz Paes
 * Juliano Lopes da Costa
 
-### <a name="doc"></a> Documentação BrailleRap
+<h3 id="doc">Documentação BrailleRap</h3>
 [Documentação em inglês](Documentation/documentation-en.md)
 
 <table>
